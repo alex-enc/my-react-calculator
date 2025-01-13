@@ -31,6 +31,13 @@ function reducer(state, {type, payload}){
         return state
       }
 
+      if (state.currentOperand == null) { /* to overwrite inputted operation */
+        return {
+          ...state,
+          operation: payload.operation,
+        }
+      }
+
       if (state.previousOperand == null) {
         return {
           ...state,
