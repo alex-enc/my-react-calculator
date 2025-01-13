@@ -98,6 +98,22 @@ function reducer(state, {type, payload}){
   }
 }
 
+const INTEGER_FORMATTER = new Intl.NumberFormat("en-us", {
+  maximumFractionDigits: 0,
+})
+
+function formatOperand(operand){
+  if (operand == null) return
+
+  const [integer, decimal] = operand.split(".")
+ 
+  if (decimal == null){
+    return INTEGER_FORMATTER.format(integer)
+  }
+
+  return `${INTEGER_FORMATTER.format(integer)}.${decimal}`
+}
+
 function evaluate({ currentOperand, previousOperand, operation }){
   const prev = parseFloat(previousOperand)
   const current = parseFloat(currentOperand)
@@ -124,6 +140,7 @@ function evaluate({ currentOperand, previousOperand, operation }){
   }
   return computation.toString()
 }
+
 function App() {
   const [{currentOperand, previousOperand, operation}, dispatch] = useReducer(
     reducer, 
@@ -134,10 +151,10 @@ function App() {
     <div className="calculator-grid">
       <div className="output">
         <div className="previous-operand">
-          {previousOperand} {operation}
+          {formatOperand(previousOperand)} {operation}
         </div>
         <div className="current-operand">
-          {currentOperand}
+          {formatOperand(currentOperand)}
         </div>
       </div>
       <button className="span-two" onClick={() => dispatch({ type: ACTIONS.CLEAR })}>AC</button>
